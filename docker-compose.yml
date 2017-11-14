@@ -1,7 +1,7 @@
 web:
     image: nginx:latest
     ports:
-        - "8080:8080"
+        - 8080:8080
     volumes:
         - ./:/www
         - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
@@ -9,6 +9,17 @@ web:
         - php
 
 php:
-    image: php:7-fpm
-    volumes:
+    image: nanoninja/php-fpm
+    volumes: 
         - ./:/www
+    env_file: .env    
+    links:
+        - mysql
+    command: bash -c "php /www/src/init.php && php-fpm -F"
+
+mysql:
+    image: mysql:latest
+    restart: always
+    env_file: .env
+    ports:
+        - 3306:3306
