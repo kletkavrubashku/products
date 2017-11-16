@@ -5,16 +5,18 @@
     $conn = db_connect();
 
     echo("Initialize...\n");
-    if (!ensure_versioning($conn))
+    if ($err = ensure_versioning($conn))
     {
-        exit("Install versioning failed: " . mysqli_error($conn) . "\n");
+        echo("Install versioning failed: $err\n");
+        exit(1);
     }
     echo("Ensure versioning completed successfully\n");
     
     echo("Start upgrade\n");
     if ($err = upgrade($conn))
     {
-        exit("Upgrade failed: $err\n");
+        echo("Upgrade failed: $err\n");
+        exit(1);
     }
     echo("Upgrade completed successfully\n");
     mysqli_close($conn);

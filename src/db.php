@@ -1,5 +1,6 @@
 <?
-    function db_connect()
+    // @return mysqli or exit(1)
+    function db_connect(): mysqli
     {
         $host = getenv("MYSQL_HOST");
         $user = getenv("MYSQL_USER");
@@ -16,7 +17,8 @@
                 $msg = "Connection failed: " . mysqli_connect_error() . "\n";
                 if ($try >= $retry_count)
                 {
-                    exit($msg);
+                    echo($msg);
+                    exit(1);
                 }
                 echo($msg);
                 sleep(1);
@@ -28,7 +30,8 @@
         return $conn;
     }
 
-    function db_transact(mysqli $conn, callable $block, int $flags = MYSQLI_TRANS_START_READ_WRITE)
+    // @return error_msg
+    function db_transact(mysqli $conn, callable $block, int $flags = MYSQLI_TRANS_START_READ_WRITE): string
     {
         if (!mysqli_autocommit($conn, FALSE))
         {
@@ -58,5 +61,5 @@
         }
         
         mysqli_autocommit($conn, TRUE);
-        return NULL;
+        return "";
     }
