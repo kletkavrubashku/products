@@ -21,7 +21,7 @@
             (
                 id              INT             NOT NULL    AUTO_INCREMENT,
                 name            VARCHAR(200)    NOT NULL, 
-                description     TEXT,
+                description     TEXT            NOT NULL,
                 price           DECIMAL(10, 2)  NOT NULL,
 
                 PRIMARY KEY(id),
