@@ -1,17 +1,18 @@
 <?
-    require_once('db.php');
+    require_once('src/db.php');
 
-    // @return array("err" => error_msg, [$request])
-    function validate_products_page_count_request(array $request): array
+    // @set $request["err"] = error_msg
+    function prepare_products_page_count_request(array &$request)
     {
         $row_count = @$request["row_count"] ?: getenv("APP_PRODUCTS_DEFAULT_PAGE_SIZE");
         if (!is_numeric($row_count) || ($row_count = intval($row_count)) < 0 || $row_count > getenv("APP_PRODUCTS_MAX_PAGE_SIZE"))
         {
-            return array("err" => "Invalid row count '$row_count'");
+			$request["err"] = "Invalid row count '$row_count'";
+            return;
         }
         $request["row_count"] = $row_count;
 
-        return $request;
+		unset($request["err"]);
     }
 
 	// @return array("err" => error_msg, ["data" => int])
@@ -37,7 +38,7 @@
     // @return array("code" => http_code, ["err" => error_msg], ["data" => int)
     function products_page_count(&$conn, array $request): array
     {
-        $request = validate_products_page_count_request($request);
+        prepare_products_page_count_request($request);
         if ($request["err"])
 		{
 			return array(

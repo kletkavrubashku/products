@@ -1,6 +1,6 @@
 <?
-	require_once("src/products.php");
-	require_once("src/products_paging.php");
+	require_once("src/products/list.php");
+	require_once("src/products/paging.php");
 	$lazy_conn = NULL;
 
 	$items = select_products($lazy_conn, $_GET);

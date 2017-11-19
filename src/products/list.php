@@ -1,15 +1,18 @@
 <?
-	require_once('db.php');
+	require_once('src/db.php');
 
-	// @return array("err" => error_msg, [$request])
-	function validate_products_request(array $request): array
+	// @set $request["err"] = error_msg
+	function prepare_products_request(array &$request)
 	{
+		$request["err"] = NULL;
+
 		// order_by
 		$order_by = @$request["order_by"] ?: "id";
 		$support_ordering = array("price", "id");
 		if (!in_array($order_by, $support_ordering))
 		{
-			return array("err" => "Ordering supported only by '" . implode("', '", $support_ordering) . "' columns");
+			$request["err"] = "Ordering supported only by '" . implode("', '", $support_ordering) . "' columns";
+			return;
 		}
 		$request["order_by"] = $order_by;
 		
@@ -18,15 +21,17 @@
 		$support_asc_desc = array("", "asc", "desc");
 		if (!in_array($asc_desc, $support_asc_desc))
 		{
-			return array("err" => "Invalid ordering '$asc_desc'");
+			$request["err"] = "Invalid ordering '$asc_desc'";
+			return;
 		}
 		$request["asc_desc"] = $asc_desc;
 		
 		// page
 		$page = @$request["page"] ?: 1;
-		if (!is_numeric($page) || ($page = intval($page)) < 0)
+		if (!is_numeric($page) || ($page = intval($page)) <= 0)
 		{
-			return array("err" => "Invalid page '$page'");
+			$request["err"] = "Invalid page '$page'";
+			return;
 		}
 		$request["page"] = $page;
 
@@ -34,11 +39,11 @@
 		$row_count = @$request["row_count"] ?: getenv("APP_PRODUCTS_DEFAULT_PAGE_SIZE");
 		if (!is_numeric($row_count) || ($row_count = intval($row_count)) < 0 || $row_count > getenv("APP_PRODUCTS_MAX_PAGE_SIZE"))
 		{
-			return array("err" => "Invalid row count '$row_count'");
+			$request["err"] = "Invalid row count '$row_count'";
+			return;
 		}
 		$request["row_count"] = $row_count;
-
-		return $request;
+		unset($request["err"]);
 	}
 
 	// @return array("err" => error_msg, ["data" => array(product1, ...)])
@@ -54,20 +59,19 @@
 		ORDER BY $order_by $asc_desc
 		LIMIT $offset, $row_count;";
 
-		$result = mysqli_query($conn, $sql);
-		if (!$result)
+		$rows = mysqli_query($conn, $sql);
+		if (!$rows)
 		{
 			return array("err" => mysqli_error($conn));
 		}
 
 		$products = array();
-		while ($row = mysqli_fetch_assoc($result))
+		while ($row = mysqli_fetch_assoc($rows))
 		{
 			$row["id"] = intval($row["id"]);
 			$products[] = $row;
 		}
 		return array(
-			"err" 	=> "",
 			"data" 	=> $products
 		);
 	}
@@ -75,7 +79,7 @@
 	// @return array("code" => http_code, ["err" => error_msg], ["data" => array(product1, ...)])
 	function select_products(&$conn, array $request): array
 	{
-		$request = validate_products_request($request);
+		prepare_products_request($request);
 		if ($request["err"])
 		{
 			return array(
