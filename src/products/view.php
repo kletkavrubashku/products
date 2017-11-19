@@ -15,7 +15,7 @@
         unset($request["err"]);
     }
 
-    // @return array("err" => error_msg, ["data" => product])
+    // @return array("err" => error_msg, "data" => product)
 	function db_select_product_by_id(mysqli $conn, int $id): array
 	{
 		$sql = "
@@ -46,7 +46,7 @@
     }
     
 
-	// @return array("code" => http_code, ["err" => error_msg], ["data" => product])
+	// @return array("code" => http_code, "err" => error_msg, "data" => product)
     function select_product_by_id(&$conn, array $request): array
     {
         prepare_view_request($request);
@@ -63,10 +63,7 @@
 		
 		if ($err = $resp["err"])
 		{
-			return array(
-				"code"	=> 500,
-				"err" 	=> $err
-			);
+			return array("err" => $err);
         }
         if (!$resp["data"])
         {

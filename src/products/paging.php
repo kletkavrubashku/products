@@ -15,7 +15,7 @@
 		unset($request["err"]);
     }
 
-	// @return array("err" => error_msg, ["data" => int])
+	// @return array("err" => error_msg, "data" => int)
 	function db_products_count(mysqli $conn): array
 	{
 		$sql = "
@@ -35,7 +35,7 @@
 		);
     }
     
-    // @return array("code" => http_code, ["err" => error_msg], ["data" => int)
+    // @return array("code" => http_code, "err" => error_msg, "data" => int)
     function products_page_count(&$conn, array $request): array
     {
         prepare_products_page_count_request($request);
@@ -52,10 +52,7 @@
 		
 		if ($err = $resp["err"])
 		{
-			return array(
-				"code"	=> 500,
-				"err" 	=> $err
-			);
+			return array("err" 	=> $err);
         }
         
         $page_count = ceil($resp["data"] / $request["row_count"]);

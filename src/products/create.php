@@ -45,8 +45,7 @@
         return mysqli_error($conn);
     }
     
-
-    // @return array("code" => http_code, ["err" => error_msg])
+    // @return array("code" => http_code, "err" => error_msg)
     function create_product(&$conn, array $request): array
     {
         prepare_create_product_request($request);
@@ -59,10 +58,11 @@
         }
 
         $conn = @$conn ?: db_connect();       
-        $err = db_create_product($conn, $request["name"], $request["description"], $request["price"]);        
+        $err = db_create_product($conn, $request["name"], $request["description"], $request["price"]);
+        if ($err)
+        {
+            return array("err" => $err);
+        }
 
-        return array(
-            "code"	=> $err ? 500 : 204,
-            "err" 	=> $err
-        );
+        return array("code"	=> 204);
     }

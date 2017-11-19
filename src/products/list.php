@@ -46,7 +46,7 @@
 		unset($request["err"]);
 	}
 
-	// @return array("err" => error_msg, ["data" => array(product1, ...)])
+	// @return array("err" => error_msg, "data" => array(product1, ...))
 	function db_select_products(mysqli $conn, string $order_by, string $asc_desc, int $offset, int $row_count): array
 	{
 		$sql = "
@@ -76,7 +76,7 @@
 		);
 	}
 
-	// @return array("code" => http_code, ["err" => error_msg], ["data" => array(product1, ...)])
+	// @return array("code" => http_code, "err" => error_msg, "data" => array(product1, ...))
 	function select_products(&$conn, array $request): array
 	{
 		prepare_products_request($request);
@@ -95,10 +95,7 @@
 		
 		if ($err = $resp["err"])
 		{
-			return array(
-				"code"	=> 500,
-				"err" 	=> $err
-			);
+			return array("err" 	=> $err);
 		}
 		return array(
 			"code"	=> 200,
