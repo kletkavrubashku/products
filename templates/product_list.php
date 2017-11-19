@@ -1,9 +1,11 @@
 <?
 	require_once("src/products.php");
+	require_once("src/products_paging.php");
+	$lazy_conn = NULL;
 
-	$order_by = @$_GET["order_by"] ?: "id";
-	$asc_desc = @$_GET["asc_desc"] ?: "";
+	$items = select_products($lazy_conn, $_GET);
+	$page_count = products_page_count($lazy_conn, $_GET);
 
-	$items = select_products($order_by, $asc_desc, 0, 100);
+	$lazy_conn and mysqli_close($lazy_conn);
 	
 	require_once("product_list.html.php");
