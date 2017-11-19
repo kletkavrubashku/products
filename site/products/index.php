@@ -31,6 +31,13 @@
 				$res = update_product($lazy_conn, $_REQUEST);
 				var_dump($res);
 			}
+			else if ($_REQUEST["delete"])
+			{
+				require_once("src/products/delete.php");
+				
+				$res = delete_product($lazy_conn, $_REQUEST);
+				var_dump($res);
+			}
 			else
 			{
 				require_once("src/products/create.php");

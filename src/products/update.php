@@ -11,17 +11,7 @@
         {
             return;
         }
-
-        // id    
-        $id = $request["id"];
-		if (!is_numeric($id) || ($id = intval($id)) <= 0)
-		{
-            $request["err"] = "Invalid id '$id'";
-            return;
-		}
-        $request["id"] = $id;        
-        
-        unset($request["err"]);
+        prepare_view_product_request($request);
     }
 
     // @return array("err" => error_msg, "found" => bool)

@@ -2,7 +2,7 @@
     require_once('src/db.php');
 
     // @set $request["err"] = error_msg
-    function prepare_view_request(array &$request)
+    function prepare_view_product_request(array &$request)
     {
         $id = $request["id"];
 		if (!is_numeric($id) || ($id = intval($id)) <= 0)
@@ -49,7 +49,7 @@
 	// @return array("code" => http_code, "err" => error_msg, "data" => product)
     function select_product_by_id(&$conn, array $request): array
     {
-        prepare_view_request($request);
+        prepare_view_product_request($request);
 		if ($request["err"])
 		{
 			return array(
