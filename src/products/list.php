@@ -54,7 +54,8 @@
 			id,
 			name,
 			description,
-			price
+			price,
+			image
 		FROM product
 		ORDER BY $order_by $asc_desc
 		LIMIT $offset, $row_count;";

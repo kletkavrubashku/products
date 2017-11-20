@@ -47,7 +47,7 @@
         $current_version = "";
         if ($row = mysqli_fetch_assoc($result))
         {
-            $current_version = $row['id'];
+            $current_version = @$row["id"] ?: "";
         }
         echo("Current version is '$current_version'\n");
 

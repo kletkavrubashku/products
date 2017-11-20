@@ -1,6 +1,8 @@
 <?
 	$lazy_conn = NULL;
 
+	$_REQUEST = array_merge($_REQUEST, $_FILES);
+
 	switch ($_SERVER["REQUEST_METHOD"])
 	{
 		case "GET":
@@ -23,7 +25,7 @@
 				require_once("templates/products/list.html");
 			}
 			break;
-		case "POST":			
+		case "POST":
 			if ($_REQUEST["edit"])
 			{
 				require_once("src/products/update.php");

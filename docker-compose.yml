@@ -11,11 +11,11 @@ web:
 php:
     image: nanoninja/php-fpm
     volumes: 
-        - ./:/www
+        - ./:/www        
     env_file: .env    
     links:
         - mysql
-    command: bash -c "php /www/src/init.php && php-fpm -F"
+    entrypoint: /www/php_entrypoint.sh
 
 mysql:
     image: mysql:latest

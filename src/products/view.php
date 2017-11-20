@@ -23,7 +23,8 @@
 			id,
 			name,
 			description,
-			price
+			price,
+			image
 		FROM product
         WHERE
             id = $id;";

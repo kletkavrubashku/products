@@ -20,9 +20,10 @@
             CREATE TABLE product
             (
                 id              INT             NOT NULL    AUTO_INCREMENT,
-                name            VARCHAR(200)    NOT NULL, 
+                name            VARCHAR(100)    NOT NULL, 
                 description     TEXT            NOT NULL,
                 price           DECIMAL(10, 2)  NOT NULL,
+                image           VARCHAR(500)    NOT NULL    UNIQUE,
 
                 PRIMARY KEY(id),
                 INDEX(price)

@@ -17,33 +17,28 @@
     // @return array("err" => error_msg, "found" => bool)
     function db_update_product(mysqli $conn, int $id, string $name, string $descr, float $price): array
     {
-        $found = false;
-        $res = db_transact($conn, function() use($conn, $id, $name, $descr, $price, &$found): string {
-            $select = db_select_product_by_id($conn, $id);
-            if ($err = $select["err"])
-            {
-                return array("err" => $err);
-            }
-            $found = isset($select["data"]);
-            if (!$found)
-            {
-                return "";
-            }
+        $select = db_select_product_by_id($conn, $id);
+        if ($err = $select["err"])
+        {
+            return array("err" => $err);
+        }
+        if (!isset($select["data"]))
+        {
+            return array("found" => FALSE);
+        }
 
-            $update = "
-            UPDATE product SET
-                name='$name',
-                description='$descr',
-                price=$price
-            WHERE
-                id=$id;";
-            mysqli_query($conn, $update);
-            return mysqli_error($conn);            
-        });
+        $update = "
+        UPDATE product SET
+            name='$name',
+            description='$descr',
+            price=$price
+        WHERE
+            id=$id;";
 
+        mysqli_query($conn, $update);
         return array(
-            "err" => $res,
-            "found" => $found
+            "err" => mysqli_error($conn),
+            "found" => TRUE
         );
     }
 
