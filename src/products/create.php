@@ -21,7 +21,7 @@
 
         // description
         $descr = @$request["description"] ?: "";
-        $max_descr_size = getenv("APP_PRODUCTS_MAX_NAME_SIZE");
+        $max_descr_size = getenv("APP_PRODUCTS_MAX_DESCRIPTION_SIZE");
         if (strlen($descr) > $max_descr_size)
         {
             $request["err"] = "Length of description more than $max_descr_size. Too long";

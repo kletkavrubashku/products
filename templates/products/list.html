@@ -1,13 +1,62 @@
 <html>
+	<head>
+			<link
+				href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+				rel="stylesheet"
+				integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+				crossorigin="anonymous">
+	</head>
 	<body>
-	<?
-		var_dump($items);
-		var_dump($page_count);
-		/*foreach ($items as $item)
-		{
-			echo "<p>$item</p>";
-		}*/
-	?>
+		<div class="jumbotron">
+			<h1>List of products</h1>
+		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th width="100%">Description</th>
+					<th>Price</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+<?
+foreach ($products as $prod)
+{
+	echo('
+			<tr valign="center">
+				<td>' . $prod["name"] . '</td>
+				<td>' . $prod["description"] . '</td>
+				<td>' . $prod["price"] . '</td>
+				<td><button type="button" class="btn btn-primary btn-xs">Edit</button></td>
+			</tr>
+	');
+}	
+?>
+			</tbody>
+		</table>
+
+		<ul class="pager">
+<?
+	if ($prev)
+	{
+		echo('
+			<li class="previous"><a href="' . $prev . '">Previous</a></li>
+		');
+	}
+	if ($next)
+	{		
+		echo('
+			<li class="next"><a href="' . $next . '">Next</a></li>
+		');
+	}
+?>
+		</ul>
+
+		<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
 	</body>
 </html>
  

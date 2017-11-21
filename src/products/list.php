@@ -77,7 +77,7 @@
 		);
 	}
 
-	// @return array("code" => http_code, "err" => error_msg, "data" => array(product1, ...))
+	// @return array("code" => http_code, "err" => error_msg, "data" => array(product1, ...), "page" => int)
 	function select_products(&$conn, array $request): array
 	{
 		prepare_products_request($request);
@@ -100,6 +100,7 @@
 		}
 		return array(
 			"code"	=> 200,
-			"data" 	=> $resp["data"]
+			"data" 	=> $resp["data"],
+			"page" 	=> $request["page"]
 		);
 	}

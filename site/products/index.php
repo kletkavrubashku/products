@@ -19,9 +19,41 @@
 				require_once("src/products/list.php");
 				require_once("src/products/paging.php");
 
-				$items = select_products($lazy_conn, $_REQUEST);
-				$page_count = products_page_count($lazy_conn, $_REQUEST);
-				
+				$products_res = select_products($lazy_conn, $_REQUEST);
+				http_response_code($code = $products_res["code"]);
+				if ($code != 200)
+				{
+					$err = $products_res["err"];
+					require_once("templates/products/error.html");
+					break;
+				}
+
+				$pages_count_res = products_pages_count($lazy_conn, $_REQUEST);
+				http_response_code($code = $pages_count_res["code"]);
+				if ($code != 200)
+				{
+					$err = $pages_count_res["err"];
+					require_once("templates/products/error.html");
+					break;
+				}
+
+				$products = $products_res["data"];
+
+				$prev = NULL;
+				$next = NULL;
+				$page = $products_res["page"];
+				if ($page > 1)
+				{
+					$query = $_GET;
+					$query["page"] = $page - 1;
+					$prev = strtok($_SERVER["REQUEST_URI"],'?') . "?" . http_build_query($query);
+				}
+				if ($page < $pages_count_res["data"])
+				{
+					$query = $_GET;
+					$query["page"] = $page + 1;
+					$next = strtok($_SERVER["REQUEST_URI"],'?') . "?" . http_build_query($query);
+				}
 				require_once("templates/products/list.html");
 			}
 			break;
