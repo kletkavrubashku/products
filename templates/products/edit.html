@@ -8,7 +8,7 @@
 		</head>
 		<body>
 			<div class="jumbotron">
-				<h1>View</h1>
+				<h1>Edit</h1>
 			</div>
 
 			<div class="form-horizontal container">
@@ -23,7 +23,7 @@
 							<label class="control-label col-sm-2" for="email">Name:</label>
 							<div class="col-sm-10">
 <?
-							echo('<div class="form-control">' . $product["name"] . '</div>');
+							echo('<input name="name" type="text" class="form-control" value="' . $product["name"] . '"/>');
 ?>
 							</div>
 						</div>
@@ -31,7 +31,7 @@
 							<label class="control-label col-sm-2" for="pwd">Description:</label>
 							<div class="col-sm-10"> 
 <?
-							echo('<div class="form-control" style="height:150">' . $product["description"] . '</div>');
+							echo('<textarea name="description" class="form-control" style="height:150">' . $product["description"] . '</textarea>');
 ?>
 							</div>
 						</div>
@@ -39,7 +39,7 @@
 							<label class="control-label col-sm-2" for="pwd">Price:</label>
 							<div class="col-sm-10"> 
 <?
-							echo('<div class="form-control">' . $product["price"] . '</div>');
+							echo('<input name="price" type="text" class="form-control" value="' . $product["price"] . '" />');
 ?>
 							</div>
 						</div>
@@ -47,7 +47,7 @@
 <?
 							echo('<a href="/products/' . $product["id"] . '/edit/">');
 ?>							
-								<button type="submit" class="btn btn-primary">Edit</button>
+								<button type="submit" class="btn btn-success">Save</button>
 							</a>
 						</div>
 					</div>

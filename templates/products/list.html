@@ -28,7 +28,11 @@ foreach ($products as $prod)
 				<td>' . $prod["name"] . '</td>
 				<td>' . $prod["description"] . '</td>
 				<td>' . $prod["price"] . '</td>
-				<td><button type="button" class="btn btn-primary btn-xs">Edit</button></td>
+				<td>
+					<a href="/products/' . $prod["id"] . '/">
+						<button type="submit" class="btn btn-primary btn-xs">View</button>
+					</a>
+				</td>
 			</tr>
 	');
 }	

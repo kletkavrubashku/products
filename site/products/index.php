@@ -11,8 +11,24 @@
 				require_once("src/products/view.php");
 				
 				$item = select_product_by_id($lazy_conn, $_REQUEST);
+				http_response_code($code = $item["code"]);
+				if ($code != 200)
+				{
+					$err = $item["err"];
+					require_once("templates/products/error.html");
+					break;
+				}
+
+				$product = $item["data"];
 				
-				require_once("templates/products/view.html");
+				if ($_REQUEST["edit"])
+				{
+					require_once("templates/products/edit.html");
+				}
+				else
+				{
+					require_once("templates/products/view.html");	
+				}
 			}
 			else
 			{
