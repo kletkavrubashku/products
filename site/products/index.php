@@ -1,4 +1,24 @@
 <?
+	function print_error_page(int $code, string $msg)
+	{
+		require_once("templates/products/error.html");
+	}	
+
+	function print_view_page(string $id, string $name, string $description, float $price, string $image)
+	{
+		require_once("templates/products/view.html");
+	}
+
+	function print_edit_page(string $id, string $name, string $description, float $price, string $image)
+	{
+		require_once("templates/products/edit.html");
+	}
+
+	function print_list_page(array $products, $prev, $next)
+	{
+		require_once("templates/products/list.html");
+	}
+
 	$lazy_conn = NULL;
 
 	$_REQUEST = array_merge($_REQUEST, $_FILES);
@@ -12,22 +32,20 @@
 				
 				$item = select_product_by_id($lazy_conn, $_REQUEST);
 				http_response_code($code = $item["code"]);
-				if ($code != 200)
+				if ($code >= 300)
 				{
-					$err = $item["err"];
-					require_once("templates/products/error.html");
+					print_error_page($code, $item["err"]);
 					break;
 				}
 
-				$product = $item["data"];
-				
+				$product = $item["data"];				
 				if ($_REQUEST["edit"])
 				{
-					require_once("templates/products/edit.html");
+					print_edit_page($product["id"], $product["name"], $product["description"], $product["price"], $product["image"]);
 				}
 				else
 				{
-					require_once("templates/products/view.html");	
+					print_view_page($product["id"], $product["name"], $product["description"], $product["price"], $product["image"]);
 				}
 			}
 			else
@@ -37,23 +55,19 @@
 
 				$products_res = select_products($lazy_conn, $_REQUEST);
 				http_response_code($code = $products_res["code"]);
-				if ($code != 200)
+				if ($code >= 300)
 				{
-					$err = $products_res["err"];
-					require_once("templates/products/error.html");
+					print_error_page($code, $products_res["err"]);
 					break;
 				}
 
 				$pages_count_res = products_pages_count($lazy_conn, $_REQUEST);
 				http_response_code($code = $pages_count_res["code"]);
-				if ($code != 200)
+				if ($code >= 300)
 				{
-					$err = $pages_count_res["err"];
-					require_once("templates/products/error.html");
+					print_error_page($code, $pages_count_res["err"]);
 					break;
 				}
-
-				$products = $products_res["data"];
 
 				$prev = NULL;
 				$next = NULL;
@@ -70,23 +84,35 @@
 					$query["page"] = $page + 1;
 					$next = strtok($_SERVER["REQUEST_URI"],'?') . "?" . http_build_query($query);
 				}
-				require_once("templates/products/list.html");
+				print_list_page($products_res["data"], $prev, $next);
 			}
 			break;
-		case "POST":
+		case "POST":			
 			if ($_REQUEST["edit"])
 			{
 				require_once("src/products/update.php");
 				
-				$res = update_product($lazy_conn, $_REQUEST);
-				var_dump($res);
+				$item = update_product($lazy_conn, $_REQUEST);
+				http_response_code($code = $item["code"]);
+				if ($code >= 300)
+				{
+					print_error_page($code, $item["err"]);
+					break;
+				}
+				header("Location: /products/" . $item["id"] . "/", TRUE, 303);
 			}
 			else if ($_REQUEST["delete"])
 			{
 				require_once("src/products/delete.php");
 				
 				$res = delete_product($lazy_conn, $_REQUEST);
-				var_dump($res);
+				http_response_code($code = $res["code"]);
+				if ($code >= 300)
+				{
+					print_error_page($code, $res["err"]);
+					break;
+				}
+				header("Location: /products/", TRUE, 303);
 			}
 			else
 			{

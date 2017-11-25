@@ -69,5 +69,8 @@
             );
         }
 
-        return array("code"	=> 204);
+        return array(
+            "code"	=> 204,
+            "id" => $request["id"]
+        );
     }
